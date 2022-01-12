@@ -68,7 +68,7 @@ tidy(fit_1)
 preds <- augment(fit_1)
 ggplot() +
   geom_point(aes(t, Y), data_1) +
-  geom_line(aes(t, .fitted), preds)
+  geom_line(aes(t, .fitted), preds, colour = "orange", size = 1)
 ```
 
 ## Use `nls.multstart`: a gridstart approach with multiple starting parameters 
@@ -103,7 +103,7 @@ tidy(fit_1)
 preds <- augment(fit_1)
 ggplot() +
   geom_point(aes(t, Y), data_1) +
-  geom_line(aes(t, .fitted), preds)
+  geom_line(aes(t, .fitted), preds, colour = "orange", size = 1)
 ```
 
 # Fit data with a two-phase exponential model
@@ -133,7 +133,7 @@ fit_2 <- nls_multstart(Y ~ alpha * exp(-beta * t) + gamma * exp(-delta * t) + th
 fit_2
 ```
 
-If you run this step multiple times, you will notice that the order of the term with alpha and beta and the term with gamma and delta can be interchanged because of the ramdom starting parameters. You may want to set the term with a larger decay constant as span_fast and k_fast
+If you run this step multiple times, you will notice that the order of the term with alpha and beta and the term with gamma and delta can be interchanged because of the ramdom starting parameters. You may want to set the term with a larger decay constant as span_fast and k_fast as below.
 
 
 ### Get fit parameters
@@ -160,7 +160,7 @@ names(plateau) <- 'plateau'
 
 # Get the sum of the squared residuals.
 ssr <- sum(resid(fit_2) ^ 2)
-names(ssr) <- 'ssr_2'
+names(ssr) <- 'ssr'
 
 # Return all coefficients
 coefficients <- c(span_fast, k_fast, span_slow, k_slow, plateau, ssr)
@@ -192,8 +192,8 @@ preds_1 <- augment(fit_1)
 preds_2 <- augment(fit_2)
 ggplot() +
   geom_point(aes(t, Y), data_2) +
-  geom_line(aes(t, .fitted, colour="one-phase"), preds_1)+
-  geom_line(aes(t, .fitted, colour="two-phase"), preds_2)+
-  scale_color_manual(name = "", values = c("one-phase" = "darkblue", "two-phase" = "red"))
+  geom_line(aes(t, .fitted, colour="one-phase"), preds_1, size= 1)+
+  geom_line(aes(t, .fitted, colour="two-phase"), preds_2, size= 1)+
+  scale_color_manual(name = "", values = c("one-phase" = "red", "two-phase" = "orange"))
 
 ```
