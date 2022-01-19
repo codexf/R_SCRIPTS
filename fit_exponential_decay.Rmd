@@ -2,9 +2,7 @@
 title: "Fitting one-phase and two-phase exponential decays"
 author: "XF"
 date: "1/11/2022"
-output:
-  html_document:
-    toc: true
+output: rmarkdown::github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -17,20 +15,21 @@ library(nls.multstart)
 
 ```
 
-# Fit data with a one-phase exponential model  
-$$Y = span \cdot e^{-k\cdot t} + plateau$$
+# 1. Fit data with a one-phase exponential model  
+Y = span * e^(-k * t) + plateau
+
 `span` is the difference between the start point and plateau in y axis  
 `k` is the rate constant  
 `plateau` is the Y value at infinite times  
 
-## Simulate data  
+## 1.1 Simulate data  
 
 ```{r simulate data}
 data_1 <-  data.frame(t = seq(100),
                       Y = 10 * exp(-0.07 * seq(100)) + 5 + rnorm(100, mean = 0, sd = 0.1))
 ```
 
-## Use `nls` by guessing the single starting value  
+## 1.2 Use `nls` by guessing the single starting value  
 
 ```{r}
 # Select an approximate span, must be lower than min(A), and greater than zero
@@ -71,7 +70,7 @@ ggplot() +
   geom_line(aes(t, .fitted), preds, colour = "orange", size = 1)
 ```
 
-## Use `nls.multstart`: a gridstart approach with multiple starting parameters 
+## 1.3 Use `nls.multstart`: a gridstart approach with multiple starting parameters 
 
 This method uses a random-search/shotgun approach to fit multiple curves. Random start parameter values are picked from a uniform distribution between start_lower() and start_upper() for each parameter. If the best model is not improved upon (in terms of AIC score) for 100 new start parameter combinations, the function will return that model fit.  
 
@@ -106,14 +105,14 @@ ggplot() +
   geom_line(aes(t, .fitted), preds, colour = "orange", size = 1)
 ```
 
-# Fit data with a two-phase exponential model
-$$Y = span\_fast \cdot e^{-k\_fast \cdot t} + span\_slow \cdot e^{-k\_slow \cdot t} + plateau$$
+# 2. Fit data with a two-phase exponential model
+Y = span\_fast * e^(-k\_fast * t) + span\_slow * e^(-k\_slow * t) + plateau  
 
 `k_fast` and `k_slow` are the two rate constants  
 `span_fast` and `span_slow` are the differences between the start points (either fast component or slow component) and plateau in y axis  
 `plateau` is the Y value at infinite times  
 
-## Simulate data
+## 2.1 Simulate data
 ```{r}
 data_2 <-  data.frame(t = seq(100),
                       Y = 14 * exp(-0.5 * seq(100)) +
@@ -167,7 +166,7 @@ coefficients <- c(span_fast, k_fast, span_slow, k_slow, plateau, ssr)
 coefficients
 ```
 
-## Comparing one-phase and two-phase exponential models
+## 2. Comparing one-phase and two-phase exponential models
 
 ```{r}
 # Fit data_2 with a one-phase exponential model
